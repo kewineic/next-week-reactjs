@@ -1,38 +1,62 @@
 import React from 'react';
+import api from '../../services/api';
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
 import './styles.css';
 
-function TeacherItem() {
+
+export interface Teacher{
+        id: number,
+        avatar: string, 
+        bio: string,
+        cost: number,
+        name: string,
+        subject: string,
+        whatsapp: string
+}
+
+interface TeacherItemProps{
+   teacher: Teacher
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+
+    function createNewConnection(){
+        api.post('/connections', {
+            user_id: teacher.id,
+        });
+    }
+
     return (
         <article className="teacher-item">
             <header>
                 <img
-                    src="https://avatars1.githubusercontent.com/u/62626810?s=400&u=7d400612422094801d510fc7f59d454491b57d11&v=4"
-                    alt="Kewin Costa"
+                    src={teacher.avatar}
+                    alt={teacher.name}
                 />
                 <div>
-                    <strong>Kewin Costa</strong>
-                    <span>Desenvolvimento Web</span>
+                    <strong>{teacher.name}</strong>
+                    <span>{teacher.subject}</span>
                 </div>
             </header>
 
-            <p>
-                Visual Studio Code (VS Code) was released in 2015 by Microsoft. Since then, it has ...
-                        <br /><br />
-                        Visual Studio Code (VS Code) was released in 2015 by Microsoft. Since then, it has ... Lorem ipsum resembles Latin but has no real meaning.
-                    </p>
+            <p>{teacher.bio}</p>
 
             <footer>
                 <p>
                     Preço/hora
-                            <strong>R$ 20,00</strong>
+                    <strong>{teacher.cost}</strong>
                 </p>
-                <button type="button">
+                <a 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    onClick={createNewConnection} 
+                    href={`https://wa.me/${teacher.whatsapp}`}
+                >
                     <img src={whatsappIcon} alt="Whatsapp" />
-                            Entrar em contato.
-                        </button>
+                    Entrar em contato.
+                </a>
             </footer>
         </article>
     )
